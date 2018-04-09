@@ -13,8 +13,9 @@
 #define BIRD_X_LOW X_LOW + 8
 #define BIRD_X_HIGH X_HIGH - 8
 
-
-void flap(long * flip);
+#define MAX_SEEDS 2
+#define SEED_SPEED 10
+#define COOL_DOWN 5
 void out();
 int bounds(int x,char s, int i, int j);
 void multi(int times,int * x,int * y);
@@ -72,32 +73,30 @@ unsigned char bullet[] =
 };
 UBYTE flip;
 int seedshot; 
-int maxSeeds = 3;
-int seeds;
+//int seeds;
 unsigned int seedx, seedy, seedx2, seedy2, seedx3, seedy3;
 
+
+UINT16 seedsx[MAX_SEEDS];
+UINT16 seedsy[MAX_SEEDS];
+
+//UBYTE *seedsx;
+//UBYTE *seedsy;
 void tim();
+
 
 
 
 void main()
 {
-    //flip1 = 0;
-    //long flip = 0;
     int x = 55;
     int y = 75;
-
     int time = 2;
-	//memcpy(&seeds, 0, 1);
-	//memcpy(&seedshot, 0, 1);
-	//memcpy(&seedx, 171, 1);
-	//memcpy(&seedx2, 171, 1);
-	//memcpy(&seedx3, 171, 1);
-	//printf("%d , %d , %d",seedshot,seeds,seedx);
-	//int i;
-	//int add(int, int);
 	SPRITES_8x16;
-    set_sprite_data(0, 16, bird);
+    seedshot = 0;
+
+	
+	set_sprite_data(0, 16, bird);
 	set_sprite_data(16, 2, bullet);
     set_sprite_tile(0,0);
     move_sprite(0,x,y);
@@ -165,38 +164,29 @@ while(1){
 }
 
 void tim(){
+	UINT16 i;
 	if(flip == 8){
-        set_sprite_tile(0,4);
-        flip = 0;
+			//printf("\n");
+        	set_sprite_tile(0,4);
+        	flip = 0;
 		
-    }
-    else if(flip == 4){
+	}
+	else if(flip == 4){
 		flip++;
         set_sprite_tile(0,0);
     }
 	else{flip++;}
-	if(seedx <= 170 && seedx != 0){
-		//seedshot = 0;
-		seedx += 10;
-		move_sprite(3,seedx,seedy);
-		if(seedx >= 170){seedx=0;}
-		//if(seedx == 0){seeds--;}
-	}
-	if(seedx2 <= 170 && seedx2 != 0){
-		//seedshot = 0;
-		seedx2 += 10;
-		move_sprite(4,seedx2,seedy2);
-		if(seedx2 >= 170){seedx2=0;}
-	}
-	if(seedx3 <= 170 && seedx3 != 0){
-		//seedshot = 0;
-		seedx3 += 10;
-		move_sprite(5,seedx3,seedy3);
-		if(seedx3 >= 170){seedx3=0;}
+	
+	for(i = 0; i != MAX_SEEDS; i++){
+		if(seedsx[i] != 0 && seedsx[i] <= 170){
+			seedsx[i] += SEED_SPEED;
+			move_sprite(3+i,seedsx[i],seedsy[i]);
+			if(seedsx[i] >= 170){seedsx[i]=0;}
+		}
 	}
 	if(seedshot > 0){seedshot--;}
-	if(seedshot < 0){seedshot = 0;}
-	//seeds = (seedx != 0) + (seedx2 != 0) + (seedx3 != 0);
+	else{seedshot = 0;}
+	//SHOW_SPRITES;
 }
 
 void out() //horrid beeping noise
@@ -271,16 +261,6 @@ void multi(int times,int * x,int * y){
             //TODO
     }
 }
-void flap(long * flip){
-    *flip = *flip + 1;
-    if(*flip == 1000){
-        set_sprite_tile(0,4);
-        *flip = 0;
-    }
-    else if(*flip == 500){
-        set_sprite_tile(0,0);
-    }
-}
 void down(int*x,int*y){
 	delay(20);
     *y = bounds(*y,'+',BIRD_Y_LOW,BIRD_Y_HIGH);
@@ -310,29 +290,27 @@ void left(int *x,int *y){
     //delay(20);
 }
 void a(int x,int y){
+    UINT16 i;
     set_sprite_tile(1,10);
-		if(seedshot == 0)
-		{
-			if(seedx == 0)
-			{
-				out();
-				seedx = x + 12;
-				seedy = y + 2;
-				set_sprite_tile(3,17);
-				move_sprite(3,seedx,seedy);
-				seedshot = 6;
+		if(seedshot == 0){
+			//printf("a: ");
+			for(i = 0; i != MAX_SEEDS; i++){
+				if(seedsx[i] == 0){
+					out();
+					seedsx[i] = x + 12;
+					seedsy[i] = y + 2;
+					set_sprite_tile(3,17);
+					move_sprite(3,seedsx[i],seedsy[i]);
+					seedshot = COOL_DOWN;
+					break;
+				}
 			}
-			else if(seedx2 == 0)
-			{
-				seedx2 = x + 12;
-				seedy2 = y + 2;
-				set_sprite_tile(4,17);
-				move_sprite(4,seedx2,seedy2);
-				seedshot = 6;
-			}
+			//printf("\n");
 		}
+		
 }
 void a_rel(){
 	set_sprite_tile(1,2);
 
 }
+
