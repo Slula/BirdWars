@@ -311,37 +311,26 @@ void left(int *x,int *y){
 }
 void a(int x,int y){
     set_sprite_tile(1,10);
-	if(seedshot == 0){
-		if(seedx == 0){
-			out();
-			seedx = x + 12;
-			seedy = y + 2;
-			// seeds++;
-			set_sprite_tile(3,17);
-			move_sprite(3,seedx,seedy);
-			seedshot = 6;
-		}	
-		else if(seedx2 == 0){
-			// seeds++;
-			out();
-			seedx2 = x + 12;
-			seedy2 = y + 2;
-			seeds++;
-			set_sprite_tile(4,17);
-			move_sprite(4,seedx2,seedy2);
-			seedshot = 6;
+		if(seedshot == 0)
+		{
+			if(seedx == 0)
+			{
+				out();
+				seedx = x + 12;
+				seedy = y + 2;
+				set_sprite_tile(3,17);
+				move_sprite(3,seedx,seedy);
+				seedshot = 6;
+			}
+			else if(seedx2 == 0)
+			{
+				seedx2 = x + 12;
+				seedy2 = y + 2;
+				set_sprite_tile(4,17);
+				move_sprite(4,seedx2,seedy2);
+				seedshot = 6;
+			}
 		}
-		else if(seedx3 == 0){
-			// seeds++;
-			out();
-			seedx3 = x + 12;
-			seedy3 = y +2;
-			set_sprite_tile(5,17);
-			move_sprite(5,seedx3,seedy3);
-			seedshot = 6;
-		}	
-	}
-		//printf("%d, %d, %d, %d, %d\n", seedx, seedx2, seedx3, seeds, seedshot);
 }
 void a_rel(){
 	set_sprite_tile(1,2);
