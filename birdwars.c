@@ -13,7 +13,7 @@
 #define BIRD_X_LOW X_LOW + 8
 #define BIRD_X_HIGH X_HIGH - 8
 
-//Variables that affect seed capacity, shooting rate, and speed
+//Constants that affect seed capacity, shooting rate, and speed
 #define MAX_SEEDS 3
 #define SEED_SPEED 10
 #define COOL_DOWN 5
