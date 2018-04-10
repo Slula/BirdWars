@@ -13,12 +13,10 @@
 #define BIRD_X_LOW X_LOW + 8
 #define BIRD_X_HIGH X_HIGH - 8
 
-//Constants that affect seed capacity, shooting rate, and speed
+//Constants that affect capacity, shooting rate, and speed
 #define MAX_SEEDS 3
 #define SEED_SPEED 10
 #define COOL_DOWN 5
-
-
 void out();
 int bounds(int x,char s, int i, int j);
 void multi(int times,int * x,int * y);
@@ -74,32 +72,39 @@ unsigned char bullet[] =
   0x0C,0x0C,0x00,0x00,0x00,0x00,0x00,0x00,
   0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00
 };
+
 UBYTE flip;
-int seedshot; 
+UBYTE seedshot; 
 UINT16 seedsx[MAX_SEEDS];
 UINT16 seedsy[MAX_SEEDS];
 
-void main()
-{
-	int x = 55;
-	int y = 75;
-	int time = 2;
+
+
+
+
+
+void main(){
+    int x = 55;
+    int y = 75;
+    int time = 2;
 	SPRITES_8x16;
-	seedshot = 0;
+    seedshot = 0;
+	
 	set_sprite_data(0, 16, bird);
 	set_sprite_data(16, 2, bullet);
-	set_sprite_tile(0,0);
-	move_sprite(0,x,y);
-	set_sprite_tile(1,2);
-	move_sprite(1, x + 8, y);
-	SHOW_SPRITES;
+    set_sprite_tile(0,0);
+    move_sprite(0,x,y);
+    set_sprite_tile(1,2);
+    move_sprite(1, x + 8, y);
+    SHOW_SPRITES;
 	
 	disable_interrupts();
 	add_TIM(tim);
 	enable_interrupts();
 	set_interrupts(VBL_IFLAG);
+
 	TMA_REG = 0x11U;
-	TAC_REG = 0x04U;
+    TAC_REG = 0x04U;
 	set_interrupts(VBL_IFLAG | TIM_IFLAG);
 
 	while(1){
@@ -108,8 +113,8 @@ void main()
 			right(&x,&y);
 		}
 		if(joypad() & J_LEFT){
-        multi(time,&x,&y);
-        left(&x,&y);
+			multi(time,&x,&y);
+			left(&x,&y);
 		}
 		if(joypad() & J_UP){
 			multi(time,&x,&y);
@@ -129,15 +134,14 @@ void main()
 void tim(){
 	UINT16 i;
 	if(flip == 8){
-        	set_sprite_tile(0,4);
-        	flip = 0;
+       	set_sprite_tile(0,4);
+        flip = 0;
 		
 	}
 	else if(flip == 4){
 		flip++;
         set_sprite_tile(0,0);
-    }
-	else{flip++;}
+    }else{flip++;}
 	
 	for(i = 0; i != MAX_SEEDS; i++){
 		if(seedsx[i] != 0 && seedsx[i] <= 170){
@@ -180,6 +184,7 @@ int bounds(int x,char s, int i, int j){
     }
     
 }
+
 void multi(int times,int * x,int * y){
     times--;
     if(times == 0){
@@ -187,28 +192,24 @@ void multi(int times,int * x,int * y){
     }
     if(joypad() & J_UP){
             multi(times,x,y);
-			//up(x,y);
             *y = bounds(*y,'-',BIRD_Y_LOW,BIRD_Y_HIGH);
     }
     if(joypad() & J_DOWN){
             multi(times,x,y);
             *y = bounds(*y,'+',BIRD_Y_LOW,BIRD_Y_HIGH);
-            //return y;
     }
     if(joypad() & J_RIGHT){
             multi(times,x,y);
             *x = bounds(*x,'+',BIRD_X_LOW,BIRD_X_HIGH);
-            //return x;
     }
     if(joypad() & J_LEFT){
             multi(times,x,y);
             *x = bounds(*x,'-',BIRD_X_LOW,BIRD_X_HIGH);
-            //return x;
     }
     if(joypad() & J_A){
            multi(times,x,y);
 		   a(*x,*y);
-}else{a_rel();}
+	}else{a_rel();}
     if(joypad() & J_B){
             multi(times,x,y);
             //TODO
