@@ -28,7 +28,6 @@ void right(int*x,int*y);
 void left(int*x,int*y);
 void a(int x, int y);
 void a_rel();
-
 void tim();
 
 
