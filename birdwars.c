@@ -17,6 +17,7 @@
 #define MAX_SEEDS 3
 #define SEED_SPEED 10
 #define COOL_DOWN 5
+
 void out();
 int bounds(int x,char s, int i, int j);
 void multi(int times,int * x,int * y);
