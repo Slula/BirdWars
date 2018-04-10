@@ -13,7 +13,7 @@
 #define BIRD_X_LOW X_LOW + 8
 #define BIRD_X_HIGH X_HIGH - 8
 
-#define MAX_SEEDS 2
+#define MAX_SEEDS 3
 #define SEED_SPEED 10
 #define COOL_DOWN 5
 void out();
@@ -104,69 +104,42 @@ void main()
     move_sprite(1, x + 8, y);
     SHOW_SPRITES;
 	
-	
-
-	//TMA_REG = 0x00U;
-
-	
 	disable_interrupts();
 	add_TIM(tim);
 	enable_interrupts();
 	set_interrupts(VBL_IFLAG);
 
-	 //WORD i;
 	 TMA_REG = 0x11U;
      TAC_REG = 0x04U;
 	 set_interrupts(VBL_IFLAG | TIM_IFLAG);
-     //i = add(3, 3);
-	// printf("%d\n",i);
-	 //puts("\n");
-while(1){
-	//printf("%d\n",seeds);
-	//gameloop:
-    if(joypad() & J_RIGHT)
-    {
-        //flap(&flip);
-        multi(time,&x,&y);
-        right(&x,&y);
-    }
 
-    if(joypad() & J_LEFT)
-    {
-        //flap(&flip);
+	while(1){
+		if(joypad() & J_RIGHT){
+			multi(time,&x,&y);
+			right(&x,&y);
+		}
+		if(joypad() & J_LEFT){
         multi(time,&x,&y);
         left(&x,&y);
-    }
-    if(joypad() & J_UP)
-    {
-        // flap(&flip);
-        multi(time,&x,&y);
-        up(&x,&y);
-    }
-    if(joypad() & J_DOWN)
-    {
-        // flap(&flip);
-        multi(time,&x,&y);
-        down(&x,&y);
-    }
-    if(joypad() & J_A)
-    {
-        // flap(&flip);
-        multi(time,&x,&y);
-        a(x,y);
-    }else{a_rel();}
-	//SHOW_SPRITES;
-    // flap(&flip);
-    //return flip;
-    //flip++;
-    //flip = flap(flip);
-}
+		}
+		if(joypad() & J_UP){
+			multi(time,&x,&y);
+			up(&x,&y);
+		}
+		if(joypad() & J_DOWN){
+			multi(time,&x,&y);
+			down(&x,&y);
+		}
+		if(joypad() & J_A){
+			multi(time,&x,&y);
+			a(x,y);
+		}else{a_rel();}
+	}
 }
 
 void tim(){
 	UINT16 i;
 	if(flip == 8){
-			//printf("\n");
         	set_sprite_tile(0,4);
         	flip = 0;
 		
@@ -180,6 +153,7 @@ void tim(){
 	for(i = 0; i != MAX_SEEDS; i++){
 		if(seedsx[i] != 0 && seedsx[i] <= 170){
 			seedsx[i] += SEED_SPEED;
+			set_sprite_tile(3+i,16);	
 			move_sprite(3+i,seedsx[i],seedsy[i]);
 			if(seedsx[i] >= 170){seedsx[i]=0;}
 		}
@@ -299,17 +273,16 @@ void a(int x,int y){
 					out();
 					seedsx[i] = x + 12;
 					seedsy[i] = y + 2;
-					set_sprite_tile(3,17);
+					set_sprite_tile(3,16);
 					move_sprite(3,seedsx[i],seedsy[i]);
 					seedshot = COOL_DOWN;
 					break;
 				}
 			}
-			//printf("\n");
 		}
 		
 }
-void a_rel(){
+void a_rel(){ //used to close mouth
 	set_sprite_tile(1,2);
 
 }
